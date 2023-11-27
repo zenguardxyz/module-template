@@ -2,9 +2,12 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { getGelatoAddress } from "@gelatonetwork/relay-context";
 import { ZeroAddress } from "ethers";
+import { getProtocolManagerAddress } from "../utils/protocol";
 
 const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    const { deployments, getNamedAccounts } = hre;
+    
+    const { deployments, getNamedAccounts, ethers } = hre;
+    const manager = await getProtocolManagerAddress(hre)
     const { deployer, recoverer } = await getNamedAccounts();
     const { deploy } = deployments;
 
@@ -21,19 +24,26 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         deterministicDeployment: true,
     });
 
-    await deploy("WhitelistPlugin", {
+    await deploy("WhitelistHook", {
         from: deployer,
-        args: [],
+        args: [[manager]],
         log: true,
         deterministicDeployment: true,
     });
 
-    await deploy("RecoveryWithDelayPlugin", {
-        from: deployer,
-        args: [recoverer],
-        log: true,
-        deterministicDeployment: true,
-    });
+    // await deploy("WhitelistPlugin", {
+    //     from: deployer,
+    //     args: [],
+    //     log: true,
+    //     deterministicDeployment: true,
+    // });
+
+    // await deploy("RecoveryWithDelayPlugin", {
+    //     from: deployer,
+    //     args: [recoverer],
+    //     log: true,
+    //     deterministicDeployment: true,
+    // });
 
 };
 

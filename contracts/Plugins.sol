@@ -33,8 +33,9 @@ contract RelayPlugin is BasePluginWithEventMetadata {
                 name: "Relay Plugin",
                 version: "1.0.0",
                 requiresRootAccess: false,
-                iconUrl: "",
-                appUrl: "https://5afe.github.io/safe-core-protocol-demo/#/relay/${plugin}"
+                iconUrl: "https://www.gelato.network/brand-assets/GEL_Token_Logos/GEL%20Token%20Logo.png",
+                appUrl: "https://5afe.github.io/safe-core-protocol-demo/#/relay/${plugin}",
+                hook: false
             })
         )
     {

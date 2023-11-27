@@ -54,7 +54,7 @@ contract RecoveryWithDelayPlugin is BasePluginWithEventMetadata {
         address _recoverer
     )
         BasePluginWithEventMetadata(
-            PluginMetadata({name: "Recovery Plugin", version: "1.0.0", requiresRootAccess: true, iconUrl: "", appUrl: ""})
+            PluginMetadata({name: "Recovery Plugin", version: "1.0.0", requiresRootAccess: true, iconUrl: "", appUrl: "", hook: false})
         )
     {
         recoverer = _recoverer;

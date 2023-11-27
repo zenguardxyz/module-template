@@ -23,7 +23,7 @@ export const getProtocolManagerAddress = async(hre: HardhatRuntimeEnvironment): 
     if (chainId === "31337") return deployMock(hre, "ManagerMock")
     
     if (!(chainId in protocolDeployments)) throw Error("Unsupported Chain")
-    const manager = (protocolDeployments as any)[chainId][0].contracts.SafeProtocolManager.address
+    const manager = (protocolDeployments as any)[chainId][0].contracts.SafeProtocolManagerAttestation.address
     if (typeof manager !== "string") throw Error("Unexpected Manager")
     return manager
 }

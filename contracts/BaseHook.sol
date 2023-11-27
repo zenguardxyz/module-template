@@ -3,6 +3,7 @@ pragma solidity ^0.8.18;
 
 import {ISafeProtocolPlugin} from "@safe-global/safe-core-protocol/contracts/interfaces/Integrations.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {ISafeProtocolHooks} from "@safe-global/safe-core-protocol/contracts/interfaces/Integrations.sol";
 
 enum MetadataProviderType {
     IPFS,
@@ -36,7 +37,7 @@ library PluginMetadataOps {
 
     function decode(bytes calldata data) internal pure returns (PluginMetadata memory) {
         require(bytes16(data[0:2]) == bytes16(0x0000), "Unsupported format or format version");
-        (string memory name, string memory version, bool requiresRootAccess, string memory iconUrl, string memory appUrl, bool hook) = abi.decode(
+        (string memory name, string memory version, bool requiresRootAccess, string memory iconUrl, string memory appUrl,  bool hook) = abi.decode(
             data[2:],
             (string, string, bool, string, string, bool)
         );
@@ -44,7 +45,7 @@ library PluginMetadataOps {
     }
 }
 
-abstract contract BasePlugin is ISafeProtocolPlugin {
+abstract contract BaseHook is ISafeProtocolHooks {
     using PluginMetadataOps for PluginMetadata;
 
     string public name;
@@ -59,17 +60,17 @@ abstract contract BasePlugin is ISafeProtocolPlugin {
         metadataHash = keccak256(metadata.encode());
     }
 
-    function supportsInterface(bytes4 interfaceId) external view returns (bool) {
-        return interfaceId == type(ISafeProtocolPlugin).interfaceId || interfaceId == type(IERC165).interfaceId;
+    function supportsInterface(bytes4 interfaceId) external view override returns (bool) {
+        return interfaceId == type(ISafeProtocolHooks).interfaceId || interfaceId == 0x01ffc9a7;
     }
 }
 
-abstract contract BasePluginWithStoredMetadata is BasePlugin, IMetadataProvider {
+abstract contract BaseHookWithStoredMetadata is BaseHook, IMetadataProvider {
     using PluginMetadataOps for PluginMetadata;
 
     bytes private encodedMetadata;
 
-    constructor(PluginMetadata memory metadata) BasePlugin(metadata) {
+    constructor(PluginMetadata memory metadata) BaseHook(metadata) {
         encodedMetadata = metadata.encode();
     }
 
@@ -78,22 +79,22 @@ abstract contract BasePluginWithStoredMetadata is BasePlugin, IMetadataProvider 
         return encodedMetadata;
     }
 
-    function metadataProvider() public view override returns (uint256 providerType, bytes memory location) {
+    function metadataProvider() public view returns (uint256 providerType, bytes memory location) {
         providerType = uint256(MetadataProviderType.Contract);
         location = abi.encode(address(this));
     }
 }
 
-abstract contract BasePluginWithEventMetadata is BasePlugin {
+abstract contract BaseHookWithEventMetadata is BaseHook {
     using PluginMetadataOps for PluginMetadata;
 
     event Metadata(bytes32 indexed metadataHash, bytes data);
 
-    constructor(PluginMetadata memory metadata) BasePlugin(metadata) {
+    constructor(PluginMetadata memory metadata) BaseHook(metadata) {
         emit Metadata(metadataHash, metadata.encode());
     }
 
-    function metadataProvider() public view override returns (uint256 providerType, bytes memory location) {
+    function metadataProvider() public view returns (uint256 providerType, bytes memory location) {
         providerType = uint256(MetadataProviderType.Event);
         location = abi.encode(address(this));
     }

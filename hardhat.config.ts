@@ -52,7 +52,16 @@ sharedNetworkConfig.accounts = {
 }
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.18",
+  solidity: {
+    version: "0.8.18",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 100,
+      },
+      viaIR: true,
+    },
+  },
   gasReporter: {
     enabled: (process.env.REPORT_GAS) ? true : false
   },
@@ -72,10 +81,13 @@ const config: HardhatUserConfig = {
       ...sharedNetworkConfig,
       url: `https://goerli.infura.io/v3/${INFURA_KEY}`,
     },
+    sepolia: {
+      ...sharedNetworkConfig,
+      url: `https://eth-sepolia.g.alchemy.com/v2/eCr9bFDzgYgDrox-mnXPPh7_koP-agKo`,
+    },
     base_goerli: {
       ...sharedNetworkConfig,
-      url: `https://base-goerli.gateway.tenderly.co`,
-      gasPrice: 35000000000,
+      url: `https://base-goerli.g.alchemy.com/v2/K1GZzIiF6-PthdjPtfzvTOMcej2zOWWA`,
     },
     base: {
       ...sharedNetworkConfig,

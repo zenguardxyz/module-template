@@ -32,7 +32,7 @@ contract WhitelistPlugin is BasePluginWithEventMetadata {
 
     constructor()
         BasePluginWithEventMetadata(
-            PluginMetadata({name: "Whitelist Plugin", version: "1.0.0", requiresRootAccess: false, iconUrl: "", appUrl: ""})
+            PluginMetadata({name: "Whitelist Plugin", version: "1.0.0", requiresRootAccess: false, iconUrl: "", appUrl: "", hook: false})
         )
     {}
 
