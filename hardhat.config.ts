@@ -85,7 +85,7 @@ const config: HardhatUserConfig = {
       ...sharedNetworkConfig,
       url: `https://eth-sepolia.g.alchemy.com/v2/eCr9bFDzgYgDrox-mnXPPh7_koP-agKo`,
     },
-    base_goerli: {
+    baseGoerli: {
       ...sharedNetworkConfig,
       url: `https://base-goerli.g.alchemy.com/v2/K1GZzIiF6-PthdjPtfzvTOMcej2zOWWA`,
     },
